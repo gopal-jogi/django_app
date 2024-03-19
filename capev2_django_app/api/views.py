@@ -1,8 +1,12 @@
+# myapp/views.py
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import requests
-from django.http import JsonResponse
+
+# Global variables for URL and token
+API_URL = 'http://172.174.239.25:8000/apiv2/'
+TOKEN = 'd629af8a5ea6f92294d887019e7fccca554bb109'
 
 class TaskCreateFileView(APIView):
     def post(self, request):
@@ -39,32 +43,28 @@ class TaskCreateFileView(APIView):
             'clock': clock
         }
 
-        # Authentication token
-        token = 'd629af8a5ea6f92294d887019e7fccca554bb109'  # Replace with your actual token
-        headers = {'Authorization': f'Token {token}'}
+        # Authentication headers
+        headers = {'Authorization': f'Token {TOKEN}'}
 
-        # Open the file in binary mode
         # Prepare file payload
         multipart_file = {"file": ("temp_file_name", file)}
 
         # Send POST request to the third-party API
-        api_url = 'http://172.174.239.25:8000/apiv2/tasks/create/file/'
         try:
-            response = requests.post(api_url, files=multipart_file,data=task_data, headers=headers)
+            response = requests.post(API_URL + 'tasks/create/file/', files=multipart_file, data=task_data, headers=headers)
             response.raise_for_status()  # Raise exception for HTTP errors
 
             # Check if response is successful
             if response.status_code == 200:
                 # Extract task_id from the response JSON
                 task_id = response.json()
-                return JsonResponse({'task_id': task_id}, status=201)
+                return Response({'task_id': task_id}, status=status.HTTP_201_CREATED)
             else:
-                return JsonResponse({'error': 'Failed to create task'}, status=500)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+                return Response({'error': 'Failed to create task'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# create a url view
 class TaskCreateUrlView(APIView):
     def post(self, request):
         # Required parameter: URL
@@ -87,14 +87,12 @@ class TaskCreateUrlView(APIView):
             'clock': request.data.get('clock')
         }
 
-        # Authentication token
-        token = 'd629af8a5ea6f92294d887019e7fccca554bb109'  # Replace with your actual token
-        headers = {'Authorization': f'Token {token}'}
+        # Authentication headers
+        headers = {'Authorization': f'Token {TOKEN}'}
 
         # Send POST request to the third-party API
-        api_url = 'http://172.174.239.25:8000/apiv2/tasks/create/url/'
         try:
-            response = requests.post(api_url, data={'url': url, **data}, headers=headers)
+            response = requests.post(API_URL + 'tasks/create/url/', data={'url': url, **data}, headers=headers)
             response.raise_for_status()  # Raise exception for HTTP errors
 
             # Check if response is successful
@@ -107,7 +105,7 @@ class TaskCreateUrlView(APIView):
         except requests.exceptions.RequestException as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-#Task list
+
 class TaskListView(APIView):
     def get(self, request, limit=None, offset=None):
         # Parameters
@@ -117,14 +115,12 @@ class TaskListView(APIView):
         if offset:
             params['offset'] = offset
 
-        # Authentication token
-        token = 'd629af8a5ea6f92294d887019e7fccca554bb109'  # Replace with your actual token
-        headers = {'Authorization': f'Token {token}'}
+        # Authentication headers
+        headers = {'Authorization': f'Token {TOKEN}'}
 
         # Send GET request to the third-party API
-        api_url = 'http://172.174.239.25:8000/apiv2/tasks/list/'
         try:
-            response = requests.get(api_url, params=params, headers=headers)
+            response = requests.get(API_URL + 'tasks/list/', params=params, headers=headers)
             response.raise_for_status()  # Raise exception for HTTP errors
 
             # Check if response is successful
@@ -136,42 +132,18 @@ class TaskListView(APIView):
                 return Response({'error': 'Failed to retrieve tasks'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except requests.exceptions.RequestException as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
 
-#Task view
-class TaskView(APIView):
-    def get(self,request,id):
-        
-        # Authentication token
-        token = 'd629af8a5ea6f92294d887019e7fccca554bb109'  # Replace with your actual token
-        headers = {'Authorization': f'Token {token}'}
-        # Send GET request to the third-party API
-        api_url = f'http://172.174.239.25:8000/apiv2/tasks/view/{id}/'
-        try:
-            response = requests.get(api_url, headers=headers)
-            response.raise_for_status()  # Raise exception for HTTP errors
-            # Check if response is successful
-            if response.status_code == 200:
-                # Extract task details from the response JSON
-                task_details = response.json()
-                return Response({'task_details': task_details}, status=status.HTTP_200_OK)
-            else:
-                return Response({'error': 'Failed to retrieve task details'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except requests.exceptions.RequestException as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-#Task view
 class TaskView(APIView):
-    def get(self,request,id):
-        
-        # Authentication token
-        token = 'd629af8a5ea6f92294d887019e7fccca554bb109'  # Replace with your actual token
-        headers = {'Authorization': f'Token {token}'}
+    def get(self, request, id):
+        # Authentication headers
+        headers = {'Authorization': f'Token {TOKEN}'}
+
         # Send GET request to the third-party API
-        api_url = f'http://172.174.239.25:8000/apiv2/tasks/view/{id}/'
         try:
-            response = requests.get(api_url, headers=headers)
+            response = requests.get(API_URL + f'tasks/view/{id}/', headers=headers)
             response.raise_for_status()  # Raise exception for HTTP errors
+
             # Check if response is successful
             if response.status_code == 200:
                 # Extract task details from the response JSON
@@ -183,4 +155,23 @@ class TaskView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-            
+class TaskDeleteView(APIView):
+    def get(self, request, id):
+        # Authentication headers
+        headers = {'Authorization': f'Token {TOKEN}'}
+
+        # Send DELETE request to the third-party API
+        try:
+            response = requests.get(API_URL + f'tasks/delete/{id}/', headers=headers)
+            response.raise_for_status()  # Raise exception for HTTP errors
+
+            # Check if response is successful
+            if response.status_code == 200:
+                task_details = response.json()
+                return Response({'message': task_details}, status=status.HTTP_200_OK)
+            elif response.status_code == 404:
+                return Response({'error': 'Task not found'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({'error': 'Unable to delete the task'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except requests.exceptions.RequestException as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

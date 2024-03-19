@@ -6,4 +6,5 @@ urlpatterns = [
     path('tasks/create/url/', TaskCreateUrlView.as_view(), name='tasks-create-url'),
     path('tasks/list/', TaskListView.as_view(), name='tasks-list'),
     path('tasks/view/<int:id>/', TaskView.as_view(), name='tasks-view'),
+    path('tasks/delete/<int:id>/', TaskDeleteView.as_view(), name='task_delete'),
 ]
