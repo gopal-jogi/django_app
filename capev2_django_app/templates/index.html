@@ -4,22 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
 </head>
 <body>
-    <div class="container min-h-screen">
-        <nav>
-            <img src="" alt="">
-            <ul>
-                <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="{% url 'Submit' %}">Submit</a></li>
-                <li><a href="{% url 'Intel' %}">Intel</a></li>
-                <li><a href="{% url 'Launch' %}">Launch</a></li>
-                <li><a href="{% url 'Results' %}">Results</a></li>
-                <li><a href="{% url 'Account' %}">Account</a></li>
-            </ul>
+    <div>
+        <nav class="flex items-center flex-wrap justify-between border border-b-[#1A202C] relative">
+            
+                <img src="" alt="LOGO" class="w-40 pl-6 cursor-pointer">
+            
+            <div class="p-2">
+                <input type="text" placeholder="Search" class="rounded-md">
+            </div>
+            <div>
+                <ul class="flex flex-row font-bold p-2">
+                    <li class="px5"><a href="#" class="px-2">Home</a></li>
+                    <li class="px5"><a href="#" class="px-2">Submit</a></li>
+                    <li class="px5"><a href="#" class="px-2">Intel</a></li>
+                    <li class="px5"><a href="#" class="px-2">Launch</a></li>
+                    <li class="px5"><a href="#" class="px-2">Results</a></li>
+                    <li class="px5"><a href="#" class="px-2">Account</a></li>
+                </ul>
+            </div>
+            <div class="font-bold p-2">
+                <button class="ml-2 p-2 border border-[#2D3648] rounded-md ">Upgrade</button>
+                <button class="ml-2 p-2 bg-[#2D3648] text-white rounded-md">Feedback</button>
+            </div>
         </nav>
+    </div>
+    <div>
+        <div>
+            <div>
+                <h1>CAPE</h1>
+                <p>Competitive Analysis Platform for Entrepreneurs</p>
+            </div>
+            <div>
+                <h1>Get Started</h1>
+                <p>Get started with CAPE by creating an account</p>
+                <button>Sign Up</button>
+            </div>
+        </div>
+        <div>
+            <div>
+                <h1>Features</h1>
+                <p>CAPE provides a wide range of features to help you analyze your competition</p>
+            </div>
+            <div>
+                <div>
+                    <h1>Feature 1</h1>
+                    <p>Feature 1 description</p>
+                </div>
+                <div>
+                    <h1>Feature 2</h1>
+                    <p>Feature 2 description</p>
+                </div>
+                <div>
+                    <h1>Feature 3</h1>
+                    <p>Feature 3 description</p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
